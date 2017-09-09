@@ -1,5 +1,2 @@
 /target/
-
-identifiers.csv
-transactions_2017aug.csv
-transactions_PARSED_2017aug.csv
+/transactions_PARSED_2017aug.csv
