@@ -1,6 +1,8 @@
 package proj.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -18,54 +20,79 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
 public class Main {
-
-	private static final String TRANSACTIONS_FILENAME = "transactions_2017aug.csv";
-	private static final String PARSED_TRANSACTIONS_FILENAME = "transactions_PARSED_2017aug.csv";
-	private static final String IDENTIFIERS_FILENAME = "identifiers.csv";
-	
 	
 	public static void main (String[] args)  {
-		List<Transaction> transactions = loadCsvFile(TRANSACTIONS_FILENAME, Transaction.class);
-		List<Identifier> identifiers = loadCsvFile(IDENTIFIERS_FILENAME, Identifier.class);
+		final String TRANSACTIONS_FILENAME = "transactions_2017aug.csv";
+		final String PARSED_TRANSACTIONS_FILENAME = "transactions_PARSED_2017aug.csv";
+		final String IDENTIFIERS_FILENAME = "identifiers.csv";
+		final String GENERIC_ACCOUNT = "debit";
+		
+		List<Transaction> transactions = readCsvFile(TRANSACTIONS_FILENAME, Transaction.class);
+		List<Identifier> identifiers = readCsvFile(IDENTIFIERS_FILENAME, Identifier.class);
+		sortIdentifiers(identifiers);
 		List<ParsedTransaction> parsedTransactions = new ArrayList<>();
-		System.out.println("lists created");
 		
-		ParsedTransaction sample = new ParsedTransaction();
-		sample.setAccount("chase checking");
-		sample.setAmount(transactions.get(0).getAmount());
-		sample.setCategory("groceries");
-		sample.setType("UNKNOWN");
-		sample.setDate(transactions.get(0).getDate());
-		sample.setDescription(transactions.get(0).getDescription());
-		parsedTransactions.add(sample);
-		System.out.println("sample transaction created");
+		//iterate through list of transactions, get each transaction's description, search for a match on identifiers
+		//NOTE: certain transactions have a varying number (like lyft, so do stores to identify different branches).
+		//therefore, must come up with a better way for the user to identify such discrepancies.
+		//writing an algorithm to remove the number wont work as certain classification like ally bank transfers
+		//are identifiable via account numbers.
+		Identifier identifier = new Identifier();
+		ParsedTransaction parsedTransaction = null;
+		for (Transaction transaction : transactions) {
+			identifier = matchTransaction(identifiers, transaction);
+			parsedTransaction = new ParsedTransaction();
+			parsedTransaction.setNotes("");
+			parsedTransaction.setAccount(GENERIC_ACCOUNT);
+			parsedTransaction.setAmount(transaction.getAmount());
+			parsedTransaction.setDate(transaction.getDate());
+			parsedTransaction.setDescription(identifier.getDescriptor());
+			parsedTransaction.setCategory(identifier.getCategory());
+			parsedTransaction.setType(identifier.getType());
+			parsedTransactions.add(parsedTransaction);
+		}
 		
+		writeToCsvFile(PARSED_TRANSACTIONS_FILENAME, ParsedTransaction.class, parsedTransactions);
+	}
+	
+	
+	public static void sortIdentifiers(List<Identifier> identifiers){
+		Collections.sort(identifiers, new Comparator<Identifier>(){
+
+			@Override
+			public int compare(Identifier currentIdentifier, Identifier nextIdentifier) {
+				String firstIdentification = currentIdentifier.getId().toUpperCase();
+				String secondIdentification = nextIdentifier.getId().toUpperCase(); 
+				return firstIdentification.compareTo(secondIdentification);
+			}
+			
+		});
+	}
+	
+	
+	public static <T> void writeToCsvFile(String filename, Class<T> cls, List<T> content) {
 		try {
-			Writer writer = new FileWriter(PARSED_TRANSACTIONS_FILENAME);
-			StatefulBeanToCsv<ParsedTransaction> beanToCsv = new StatefulBeanToCsvBuilder<ParsedTransaction>(writer)
-					.withMappingStrategy(new CustomOrderMappingStrategy<ParsedTransaction>(ParsedTransaction.class)).build();
-			beanToCsv.write(parsedTransactions);
+			Writer writer = new FileWriter(filename);
+			StatefulBeanToCsv<T> beanToCsv = new StatefulBeanToCsvBuilder<T>(writer)
+					.withMappingStrategy(new CustomOrderMappingStrategy<T>(cls)).build();
+			beanToCsv.write(content);
 			writer.close();
-			System.out.println("parsed data posted");
 		} catch (CsvDataTypeMismatchException e) {
 			e.printStackTrace();
 		} catch (CsvRequiredFieldEmptyException e) {
 			e.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		
 	}
 	
 	
-	@SuppressWarnings("unchecked")
-	public static <T> List<T> loadCsvFile(String filename, Class<T> cla) {
+	public static <T> List<T> readCsvFile(String filename, Class<T> cls) {
+		List<T> records = new ArrayList<>();
 		try {
 			String csvPath = Paths.get(ClassLoader.getSystemResource(filename).toURI()).toString();
-			@SuppressWarnings("rawtypes")
-			List<T> records = new CsvToBeanBuilder(new FileReader(csvPath))
-									.withType(cla).build().parse(); 
-			return records;
+			records = new CsvToBeanBuilder<T>(new FileReader(csvPath))
+									.withType(cls).build().parse(); 
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
@@ -74,32 +101,35 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-		return null;
+		return records;
 	}
 	
 	
-	//TODO: revise this function (binary search algorithm) to work for identifying records
-	public static int identifyTransaction(String[] arr, String key) {
+	public static Identifier matchTransaction(List<Identifier> identifiers, Transaction transaction) {
 		int low = 0;
 		int mid = 0;
-		int high = arr.length;
+		int high = identifiers.size() - 1;
 		int comparisons = 0;
+		Identifier identifier = null;
+		String description = transaction.getDescription().toUpperCase();
+		String identification = "";
 		
-		while (low < high) {
-			mid = high / 2;
+		while (low <= high) {
+			mid = (low + high) / 2;
 			comparisons++;
-			if (key.compareTo(arr[mid]) == 0 || key.contains(arr[mid])) {
-				System.out.println("comparisons: " + comparisons);
-				return mid;
+			identifier = identifiers.get(mid);
+			identification = identifier.getId().toUpperCase();
+			if (description.compareTo(identification) == 0 || description.contains(identification)) {
+				return identifier;
 			}
-			else if (key.compareTo(arr[mid]) > 0) {
+			else if (description.compareTo(identification) > 0) {
 				low = mid + 1;
 			}
 			else {
 				high = mid - 1;
 			}
 		}
-		System.out.println("comparisons: " + comparisons);
-		return -1;
+		identifier = new Identifier();		//return default identifier instead?
+		return identifier;
 	}
 }
