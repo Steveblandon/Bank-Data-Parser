@@ -16,7 +16,19 @@ public class Transaction {
 
 	@CsvBindByName
     private String description;
-    
+	
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof Transaction) {
+			Transaction other = (Transaction) object;
+			if (other.amount == this.amount
+			  && other.date.equals(this.date)
+			  && other.description == this.description) {
+				return true;
+			}
+	    }
+		return false;
+	}
 	
 	public double getAmount() {
 		return amount;

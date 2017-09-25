@@ -4,6 +4,9 @@ import com.opencsv.bean.CsvBindByName;
 
 public class Identifier {
 
+	public static final String CATEGORY_UNKNOWN = "UNKNOWN";
+	public static final String TYPE_UNKNOWN = "UNKNOWN";
+	
 	@CsvBindByName
 	private boolean ambiguous;
 	

@@ -32,23 +32,13 @@ public class Main {
 		sortIdentifiers(identifiers);
 		List<ParsedTransaction> parsedTransactions = new ArrayList<>();
 		
-		//iterate through list of transactions, get each transaction's description, search for a match on identifiers
-		//NOTE: certain transactions have a varying number (like lyft, so do stores to identify different branches).
-		//therefore, must come up with a better way for the user to identify such discrepancies.
-		//writing an algorithm to remove the number wont work as certain classification like ally bank transfers
-		//are identifiable via account numbers.
+		
 		Identifier identifier = new Identifier();
-		ParsedTransaction parsedTransaction = null;
+		ParsedTransaction parsedTransaction;
 		for (Transaction transaction : transactions) {
 			identifier = matchTransaction(identifiers, transaction);
-			parsedTransaction = new ParsedTransaction();
-			parsedTransaction.setNotes("");
-			parsedTransaction.setAccount(GENERIC_ACCOUNT);
-			parsedTransaction.setAmount(transaction.getAmount());
-			parsedTransaction.setDate(transaction.getDate());
-			parsedTransaction.setDescription(identifier.getDescriptor());
-			parsedTransaction.setCategory(identifier.getCategory());
-			parsedTransaction.setType(identifier.getType());
+			parsedTransaction = new ParsedTransactionBuilder(transaction, GENERIC_ACCOUNT)
+					.applyIdentifier(identifier).build();
 			parsedTransactions.add(parsedTransaction);
 		}
 		
@@ -129,7 +119,7 @@ public class Main {
 				high = mid - 1;
 			}
 		}
-		identifier = new Identifier();		//return default identifier instead?
+		identifier = new DefaultIdentifier();
 		return identifier;
 	}
 }
