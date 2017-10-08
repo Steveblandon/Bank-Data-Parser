@@ -1,0 +1,8 @@
+TYPE,DATE,DESCRIPTION,CATEGORY,ACCOUNT,AMOUNT,NOTES
+UNKNOWN,08/18/2017,amazon,UNKNOWN,debit,-22.23,
+UNKNOWN,08/13/2017,trader joe's,Groceries,debit,-40.96,
+UNKNOWN,08/13/2017,lyft,UNKNOWN,debit,-5.32,
+UNKNOWN,08/11/2017,lyft,UNKNOWN,debit,-12.2,
+UNKNOWN,08/06/2017,trader joe's,Groceries,debit,-13.85,
+UNKNOWN,08/06/2017,ralph's,Groceries,debit,-81.43,
+UNKNOWN,08/05/2017,fat burger,Restaurants & Bars,debit,-16.66,

@@ -1,0 +1,22 @@
+identifier,descriptor,type,ambiguous,category
+AMAZON MKTPLACE PMTS,amazon,unknown,TRUE,unknown
+RALPHS #0166,ralph's,unknown,FALSE,Groceries
+TRADER JOE'S,trader joe's,unknown,FALSE,Groceries
+STEAMGAMES.COM,steam game,unknown,FALSE,Fun
+BIG WOK,big wok,unknown,FALSE,Restaurants & Bars
+WHOLEFDS PCH 10225,whole foods,unknown,FALSE,Groceries
+LYFT,lyft,unknown,TRUE,unknown
+SPORT CLIPS - CA642 - MAN,sport clips,unknown,FALSE,Personal Care
+TARGET        00001990,target,unknown,FALSE,Groceries
+TST*BREWPORT,brewport,unknown,FALSE,Restaurants & Bars
+BEACH CITIES ORTHOPEDICS,beach cities orthopedics,unknown,FALSE,Medical
+POKE BAR,poke bar,unknown,FALSE,Restaurants & Bars
+Payment Thank You-Mobile,credit card payment,transfer,FALSE,
+TIDY,tidy,unknown,FALSE,Housing
+FAT BURGER #104,fat burger,unknown,FALSE,Restaurants & Bars
+MENCHIES 004 ARTESIA PLAZ,menchies,unknown,FALSE,Restaurants & Bars
+VENMO            CASHOUT                    PPD ID: 5264681992,venmo,unknown,TRUE,
+ALLY BANK        $TRANSFER  1110336933      WEB ID: 3770527921,funding,transfer,FALSE,
+ALLY BANK        $TRANSFER  1109652625      WEB ID: 3770527921,funding,transfer,FALSE,
+ATM WITHDRAWAL                       001641  08/18550 N SEP,atm withdrawal,transfer,FALSE,
+RAYTHEON COMPANY DIR DEP                    PPD ID: 1951778500,raytheon,unknown,FALSE,paycheck

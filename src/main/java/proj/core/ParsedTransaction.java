@@ -35,10 +35,14 @@ public class ParsedTransaction extends Transaction {
 			ParsedTransaction other = (ParsedTransaction) object;
 			
 			if (super.equals(object)
-			  && other.account == this.account
-			  && other.category == this.category
-			  && other.notes == this.notes
-			  && other.type == this.type) {
+					&& (other.account.equalsIgnoreCase(this.account)
+							|| Utils.nullOrEmptyStrings(this.account, other.account))
+					&& (other.category.equalsIgnoreCase(this.category)
+							|| Utils.nullOrEmptyStrings(this.category, other.category))
+					&& (other.notes.equalsIgnoreCase(this.notes)
+							|| Utils.nullOrEmptyStrings(this.notes, other.notes))
+					&& (other.type.equalsIgnoreCase(this.type)
+							|| Utils.nullOrEmptyStrings(this.type, other.type))) {
 				return true;
 			}
 	    }
@@ -64,6 +68,10 @@ public class ParsedTransaction extends Transaction {
 	public String getType() {
 		return type;
 	}
+	
+	public boolean hasValidType() {
+		return (type.equals(TYPE_EXPENSE) || type.equals(TYPE_INCOME));
+	}
 
 	
 	public void setAccount(String account) {
@@ -83,5 +91,16 @@ public class ParsedTransaction extends Transaction {
 	
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	
+	public void copyAllFrom(ParsedTransaction parsedTransaction) {
+		this.account = parsedTransaction.account;
+		this.category = parsedTransaction.category;
+		this.notes = parsedTransaction.notes;
+		this.type = parsedTransaction.type;
+		this.setAmount(parsedTransaction.getAmount());
+		this.setDate(parsedTransaction.getDate());
+		this.setDescription(parsedTransaction.getDescription());
 	}
 }

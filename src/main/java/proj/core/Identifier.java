@@ -64,7 +64,7 @@ public class Identifier {
 
 	
 	public void setId(String id) {
-		this.id = id;
+		this.id = id.toUpperCase();
 	}
 
 	

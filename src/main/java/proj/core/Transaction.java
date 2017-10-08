@@ -17,13 +17,24 @@ public class Transaction {
 	@CsvBindByName
     private String description;
 	
+	public Transaction() {
+		super();
+	}
+	
+	public Transaction(Date date, String description, double amount) {
+		this.date = date;
+		this.description = description;
+		this.amount = amount;
+	}
+	
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof Transaction) {
 			Transaction other = (Transaction) object;
 			if (other.amount == this.amount
-			  && other.date.equals(this.date)
-			  && other.description == this.description) {
+					&& other.date.equals(this.date)
+					&& (other.description.equalsIgnoreCase(this.description)
+							|| Utils.nullOrEmptyStrings(this.description, other.description))) {
 				return true;
 			}
 	    }
@@ -56,6 +67,6 @@ public class Transaction {
 	
 	
 	public void setDescription(String description) {
-		this.description = description;
+		this.description = description.toUpperCase();
 	}
 }
