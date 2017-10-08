@@ -81,7 +81,7 @@ public class ParsedTransactionBuilder {
 			}
 		}
 		else {
-			type = identifier.getType();
+			type = identifier.getType().toUpperCase();
 		}
 	}
 }

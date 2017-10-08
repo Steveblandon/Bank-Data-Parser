@@ -1,125 +1,41 @@
 package proj.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Properties;
 
 public class Main {
-	
-	public static void main (String[] args)  {
-		final String TRANSACTIONS_FILENAME = "transactions_2017aug.csv";
-		final String PARSED_TRANSACTIONS_FILENAME = "transactions_PARSED_2017aug.csv";
-		final String IDENTIFIERS_FILENAME = "identifiers.csv";
-		final String GENERIC_ACCOUNT = "debit";
-		
-		List<Transaction> transactions = readCsvFile(TRANSACTIONS_FILENAME, Transaction.class);
-		List<Identifier> identifiers = readCsvFile(IDENTIFIERS_FILENAME, Identifier.class);
-		sortIdentifiers(identifiers);
-		List<ParsedTransaction> parsedTransactions = new ArrayList<>();
-		
-		
-		Identifier identifier = new Identifier();
-		ParsedTransaction parsedTransaction;
-		for (Transaction transaction : transactions) {
-			identifier = matchTransaction(identifiers, transaction);
-			parsedTransaction = new ParsedTransactionBuilder(transaction, GENERIC_ACCOUNT)
-					.applyIdentifier(identifier).build();
-			parsedTransactions.add(parsedTransaction);
-		}
-		
-		writeToCsvFile(PARSED_TRANSACTIONS_FILENAME, ParsedTransaction.class, parsedTransactions);
-	}
-	
-	
-	public static void sortIdentifiers(List<Identifier> identifiers){
-		Collections.sort(identifiers, new Comparator<Identifier>(){
 
-			@Override
-			public int compare(Identifier currentIdentifier, Identifier nextIdentifier) {
-				String firstIdentification = currentIdentifier.getId().toUpperCase();
-				String secondIdentification = nextIdentifier.getId().toUpperCase(); 
-				return firstIdentification.compareTo(secondIdentification);
-			}
-			
-		});
-	}
+	public static void main (String[] args)  {
+		Properties properties = loadProperties();
+		final String account = properties.getProperty("ACCOUNT", "UNKNOWN");
+		final String transactions_filename = properties.getProperty("TRANSACTIONS_FILENAME", "");
+		final String parsed_transactions_filename = properties.getProperty("PARSED_TRANSACTIONS_FILENAME", "");
+		final String identifiers_filename = properties.getProperty("IDENTIFIERS_FILENAME", "");
+		
+		System.out.println("loading transactions and identifier data...");
+		List<Transaction> transactions = OpenCsvAgent.read(transactions_filename, Transaction.class);
+		List<Identifier> identifiers = OpenCsvAgent.read(identifiers_filename, Identifier.class);
+		IdentifierRegistry identifierRegistry = new IdentifierRegistry(identifiers);
+		System.out.print("DONE.");
+		System.out.println("parsing data...");
+		TransactionParser parser = new TransactionParser(identifierRegistry, account);
+		List<ParsedTransaction> parsedTransactions = parser.parseAll(transactions);
+		System.out.print("DONE.");
+		System.out.printf("success rate: %.2f", Math.round((parser.getTotalOfunsuccessfulParses() / parsedTransactions.size())));
+		OpenCsvAgent.write(parsed_transactions_filename, ParsedTransaction.class, parsedTransactions);
+	} 
 	
 	
-	public static <T> void writeToCsvFile(String filename, Class<T> cls, List<T> content) {
-		try {
-			Writer writer = new FileWriter(filename);
-			StatefulBeanToCsv<T> beanToCsv = new StatefulBeanToCsvBuilder<T>(writer)
-					.withMappingStrategy(new CustomOrderMappingStrategy<T>(cls)).build();
-			beanToCsv.write(content);
-			writer.close();
-		} catch (CsvDataTypeMismatchException e) {
-			e.printStackTrace();
-		} catch (CsvRequiredFieldEmptyException e) {
-			e.printStackTrace();
+	public static Properties loadProperties() {
+		Properties properties = new Properties();
+		try(InputStream propStream = ClassLoader.getSystemResourceAsStream("config.properties")){
+			properties.load(propStream);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return properties;
 	}
-	
-	
-	public static <T> List<T> readCsvFile(String filename, Class<T> cls) {
-		List<T> records = new ArrayList<>();
-		try {
-			String csvPath = Paths.get(ClassLoader.getSystemResource(filename).toURI()).toString();
-			records = new CsvToBeanBuilder<T>(new FileReader(csvPath))
-									.withType(cls).build().parse(); 
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		
-		return records;
-	}
-	
-	
-	public static Identifier matchTransaction(List<Identifier> identifiers, Transaction transaction) {
-		int low = 0;
-		int mid = 0;
-		int high = identifiers.size() - 1;
-		int comparisons = 0;
-		Identifier identifier = null;
-		String description = transaction.getDescription().toUpperCase();
-		String identification = "";
-		
-		while (low <= high) {
-			mid = (low + high) / 2;
-			comparisons++;
-			identifier = identifiers.get(mid);
-			identification = identifier.getId().toUpperCase();
-			if (description.compareTo(identification) == 0 || description.contains(identification)) {
-				return identifier;
-			}
-			else if (description.compareTo(identification) > 0) {
-				low = mid + 1;
-			}
-			else {
-				high = mid - 1;
-			}
-		}
-		identifier = new DefaultIdentifier();
-		return identifier;
-	}
+
 }
