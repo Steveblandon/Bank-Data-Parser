@@ -5,9 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +14,8 @@ import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+
+import proj.core.extras.CustomOrderMappingStrategy;
 
 public class OpenCsvAgent {
 	
@@ -61,9 +61,9 @@ public class OpenCsvAgent {
 	
 	private static <T> List<T> readRecordsFromCsvFile(String filename, Class<T> cls) 
 			throws URISyntaxException, IllegalStateException, IOException {
-		URI resourceID = ClassLoader.getSystemResource(filename).toURI();
-		String filePath = Paths.get(resourceID).toString();
-		Reader reader = new FileReader(filePath);
+//		URI resourceID = ClassLoader.getSystemResource(filename).toURI();
+//		String filePath = Paths.get(resourceID).toString();
+		Reader reader = new FileReader(filename);
 		List<T> records = new CsvToBeanBuilder<T>(reader)
 				.withType(cls)
 				.build()
