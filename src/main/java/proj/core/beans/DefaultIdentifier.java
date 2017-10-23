@@ -1,4 +1,4 @@
-package proj.core;
+package proj.core.beans;
 
 public final class DefaultIdentifier extends Identifier {
 	

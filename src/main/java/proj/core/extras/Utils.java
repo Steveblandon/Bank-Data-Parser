@@ -1,4 +1,4 @@
-package proj.core;
+package proj.core.extras;
 
 public class Utils {
 	/*NOTE: when OpenCsv parses empty string fields it passes them on as null.

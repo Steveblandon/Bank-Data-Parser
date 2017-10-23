@@ -1,9 +1,11 @@
-package proj.core;
+package proj.core.beans;
 
 import java.util.Date;
 
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvDate;
+
+import proj.core.extras.Utils;
 
 public class Transaction {
 	

@@ -1,4 +1,4 @@
-package proj.core;
+package proj.core.extras;
 
 import java.io.IOException;
 import java.io.InputStream;

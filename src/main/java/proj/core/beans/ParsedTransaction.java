@@ -1,6 +1,8 @@
-package proj.core;
+package proj.core.beans;
 
 import com.opencsv.bean.CsvBindByName;
+
+import proj.core.extras.Utils;
 
 public class ParsedTransaction extends Transaction {
 	

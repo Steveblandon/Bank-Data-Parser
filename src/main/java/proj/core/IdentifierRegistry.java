@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import proj.core.beans.DefaultIdentifier;
+import proj.core.beans.Identifier;
+
 public class IdentifierRegistry {
 	
 	List<Identifier> identifiers;
