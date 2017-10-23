@@ -8,17 +8,18 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import proj.core.DefaultIdentifier;
-import proj.core.Identifier;
 import proj.core.IdentifierRegistry;
 import proj.core.OpenCsvAgent;
-import proj.core.ParsedTransaction;
 import proj.core.ParsedTransactionBuilder;
-import proj.core.Transaction;
 import proj.core.TransactionParser;
+import proj.core.beans.DefaultIdentifier;
+import proj.core.beans.Identifier;
+import proj.core.beans.ParsedTransaction;
+import proj.core.beans.Transaction;
 
 public class TransactionParserTest {
 
+	String PARSED_TRANSACTIONS_FILE = "C:\\Users\\steve\\Workshop\\Git\\bank-data-parser\\target\\test-classes\\parsedTransactionData.csv";
 	Transaction transaction;
 	TransactionParser transactionParser;
 	List<Transaction> transactions;
@@ -35,7 +36,7 @@ public class TransactionParserTest {
 	@Test
 	public void testParseAll() {
 		parseAllTestSetUp();
-		List<ParsedTransaction> expectedParsedTransactions = OpenCsvAgent.read("parsedTransactionData.csv", ParsedTransaction.class);
+		List<ParsedTransaction> expectedParsedTransactions = OpenCsvAgent.read(PARSED_TRANSACTIONS_FILE, ParsedTransaction.class);
 		
 		List<ParsedTransaction> actualParsedTransactions = transactionParser.parseAll(transactions);
 		

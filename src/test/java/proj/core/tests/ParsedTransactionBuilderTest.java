@@ -6,11 +6,11 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
-import proj.core.DefaultIdentifier;
-import proj.core.Identifier;
-import proj.core.ParsedTransaction;
 import proj.core.ParsedTransactionBuilder;
-import proj.core.Transaction;
+import proj.core.beans.DefaultIdentifier;
+import proj.core.beans.Identifier;
+import proj.core.beans.ParsedTransaction;
+import proj.core.beans.Transaction;
 
 public class ParsedTransactionBuilderTest {
 

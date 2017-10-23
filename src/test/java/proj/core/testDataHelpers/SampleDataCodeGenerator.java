@@ -1,15 +1,11 @@
 package proj.core.testDataHelpers;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
-
-import proj.core.Transaction;
 
 public class SampleDataCodeGenerator {
 
@@ -28,6 +24,7 @@ public class SampleDataCodeGenerator {
 			System.out.print("\"), \"" + values[1]);
 			System.out.print("\", " + values[2] + "));\n");
 		}
+		reader.close();
 	}
 
 }

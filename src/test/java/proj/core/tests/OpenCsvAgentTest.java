@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import proj.core.OpenCsvAgent;
-import proj.core.Transaction;
+import proj.core.beans.Transaction;
 
 public class OpenCsvAgentTest {
 

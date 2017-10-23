@@ -7,8 +7,8 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
-import proj.core.DefaultIdentifier;
-import proj.core.ParsedTransaction;
+import proj.core.beans.DefaultIdentifier;
+import proj.core.beans.ParsedTransaction;
 
 public class ParsedTransactionTest {
 
