@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.text.JTextComponent;
 
 import proj.core.IdentifierRegistry;
+import proj.core.Main;
 import proj.core.OpenCsvAgent;
 import proj.core.TransactionParser;
 import proj.core.beans.Identifier;
@@ -17,8 +18,6 @@ import proj.core.gui.abstracts.Subscriber;
 
 public class ParseRequestProcessor extends MouseAdapter implements Publisher {
 
-	private String DEFAULT_WRITE_FILENAME = "parsedTransactions";
-	private String DEFAULT_FILE_EXT = ".csv";
 	private JTextComponent accountNameComp;
 	private JTextComponent transactionsURIComp;
 	private JTextComponent identifiersURIComp;
@@ -42,13 +41,29 @@ public class ParseRequestProcessor extends MouseAdapter implements Publisher {
 	@Override
     public void mouseClicked(MouseEvent e) {
 		loadData();
+		saveParsedData(parseData());
+		saveConfig();
+	}
+	
+	private List<ParsedTransaction> parseData() {
 		TransactionParser parser = new TransactionParser(identifierRegistry, accountNameComp.getText());
 		List<ParsedTransaction> parsedTransactions = parser.parseAll(transactions); 
 		subscriber.update(parser.getSuccessRatioMessage());
+		return parsedTransactions;
+	}
+
+	private void saveParsedData(List<ParsedTransaction> parsedTransactions) {
 		String writeFileName = getTimestampedFileName();
 		OpenCsvAgent.write(writeFileName, ParsedTransaction.class, parsedTransactions);
+		
 	}
-	
+
+	private void saveConfig() {
+		Main.properties.setProperty(Main.PROP_ACCOUNT, accountNameComp.getText());
+		Main.properties.setProperty(Main.PROP_IDENTIFIERS, identifiersURIComp.getText());
+		Main.properties.setProperty(Main.PROP_TRANSACTIONS, transactionsURIComp.getText());
+	}
+
 	private void loadData() {
 		transactions = OpenCsvAgent.read(transactionsURIComp.getText(), Transaction.class);
 		identifiers = OpenCsvAgent.read(identifiersURIComp.getText(), Identifier.class);
@@ -57,7 +72,7 @@ public class ParseRequestProcessor extends MouseAdapter implements Publisher {
 	
 	private String getTimestampedFileName() {
 		return new StringBuilder()
-				.append(DEFAULT_WRITE_FILENAME)
+				.append(Main.properties.getProperty(Main.PROP_PARSED))
 				.append(Calendar.YEAR)
 				.append(Calendar.MONTH)
 				.append(Calendar.DAY_OF_MONTH)
@@ -65,7 +80,7 @@ public class ParseRequestProcessor extends MouseAdapter implements Publisher {
 				.append(Calendar.HOUR)
 				.append(Calendar.MINUTE)
 				.append(Calendar.SECOND)
-				.append(DEFAULT_FILE_EXT)
+				.append(Main.properties.getProperty(Main.PROP_PARSED_EXT))
 				.toString();
 	}
 }

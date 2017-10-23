@@ -1,14 +1,12 @@
 package proj.core.extras;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
+
+import proj.core.Main;
 
 public class CustomOrderMappingStrategy <T> extends HeaderColumnNameMappingStrategy <T> {
 	
@@ -61,14 +59,7 @@ public class CustomOrderMappingStrategy <T> extends HeaderColumnNameMappingStrat
 	 * @return header array if property is loaded successfully. Otherwise, null.
 	 */
 	private String[] retrieveHeaderOrder() {
-		Properties properties = new Properties();
-		try(InputStream propStream = ClassLoader.getSystemResourceAsStream(CONFIG_FILE)){
-			properties.load(propStream);
-			String headerOrder = properties.getProperty(CONFIG_PROP_HEADER_ORDER);
+			String headerOrder = Main.properties.getProperty(Main.PROP_HEADERS);
 			return StringUtils.split(headerOrder.toUpperCase(), ',');
-		} catch (IOException e2) {
-			e2.printStackTrace();
-		}
-		return null;
 	}
 }

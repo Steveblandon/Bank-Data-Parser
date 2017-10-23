@@ -3,6 +3,7 @@ package proj.core.gui;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -31,6 +32,11 @@ public class FilePathSelector extends MouseAdapter implements Publisher {
 		return this;
 	}
 	
+	public FilePathSelector setDefaultFilePath(String filePath) {
+		this.filePath = filePath;
+		return this;
+	}
+	
 	@Override
 	public FilePathSelector setSubscriber(Subscriber subscriber) {
 		this.subscriber = subscriber;
@@ -42,6 +48,8 @@ public class FilePathSelector extends MouseAdapter implements Publisher {
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(filterDescription, filters);
         fileChooser.setFileFilter(filter);
+        File file = new File(filePath != null? filePath : "");
+        fileChooser.setCurrentDirectory(file);
         if (fileChooser.showDialog(parent, "select") == JFileChooser.APPROVE_OPTION) {
         	filePath = fileChooser.getSelectedFile().getPath();
         	if (subscriber != null) {

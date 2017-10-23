@@ -9,6 +9,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 
+import proj.core.Main;
 import proj.core.gui.abstracts.StatusLabel;
 import proj.core.gui.abstracts.TextSettable;
 import proj.core.gui.abstracts.TextSubscriber;
@@ -71,6 +72,7 @@ public class GUI extends JFrame {
 		contentPane.add(accountLabel, "2, 2, right, default");
 		
 		accountTextField = new JTextField();
+		accountTextField.setText(Main.properties.getProperty(Main.PROP_ACCOUNT));
 		contentPane.add(accountTextField, "4, 2, fill, default");
 		accountTextField.setColumns(10);	
 	}
@@ -80,13 +82,14 @@ public class GUI extends JFrame {
 		contentPane.add(TransactionsLabel, "2, 4, right, default");
 		
 		transactionsTextField = new URITextField();
-		transactionsTextField.setText("\\");
+		transactionsTextField.setText(Main.properties.getProperty(Main.PROP_TRANSACTIONS));
 		contentPane.add(transactionsTextField, "4, 4, 5, 1, fill, default");
 		transactionsTextField.setColumns(10);
 		
 		JButton btnBrowseTr = new JButton("Browse");
         btnBrowseTr.addMouseListener(new FilePathSelector(GUI.this)
         		.setFilters("CSV", "csv")
+        		.setDefaultFilePath(transactionsTextField.getText())
         		.setSubscriber(new TextSubscriber((TextSettable) transactionsTextField)));
         contentPane.add(btnBrowseTr, "10, 4");
 	}
@@ -96,13 +99,14 @@ public class GUI extends JFrame {
 		contentPane.add(IdentifiersLabel, "2, 6, right, default");
 		
 		identifiersTextField = new URITextField();
-		identifiersTextField.setText("\\");
+		identifiersTextField.setText(Main.properties.getProperty(Main.PROP_IDENTIFIERS));
 		contentPane.add(identifiersTextField, "4, 6, 5, 1, fill, default");
 		identifiersTextField.setColumns(10);
 		
 		JButton btnBrowseId = new JButton("Browse");
         btnBrowseId.addMouseListener( new FilePathSelector(GUI.this)
         		.setFilters("CSV", "csv")
+        		.setDefaultFilePath(identifiersTextField.getText())
         		.setSubscriber(new TextSubscriber((TextSettable) identifiersTextField)));
         contentPane.add(btnBrowseId, "10, 6");
 	}
