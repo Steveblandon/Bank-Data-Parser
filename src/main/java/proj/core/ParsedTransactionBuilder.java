@@ -2,6 +2,11 @@ package proj.core;
 
 import java.util.Date;
 
+import proj.core.beans.DefaultIdentifier;
+import proj.core.beans.Identifier;
+import proj.core.beans.ParsedTransaction;
+import proj.core.beans.Transaction;
+
 
 public class ParsedTransactionBuilder {
 	
@@ -72,7 +77,7 @@ public class ParsedTransactionBuilder {
 	
 	
 	private void applyIdentifierType() {
-		if (identifier.getType() == DefaultIdentifier.TYPE_UNKNOWN) {
+		if (identifier.getType().equalsIgnoreCase(DefaultIdentifier.TYPE_UNKNOWN)) {
 			if (amount > 0) {
 				type = ParsedTransaction.TYPE_INCOME;
 			}
@@ -81,7 +86,7 @@ public class ParsedTransactionBuilder {
 			}
 		}
 		else {
-			type = identifier.getType().toUpperCase();
+			type = identifier.getType().toLowerCase();
 		}
 	}
 }
