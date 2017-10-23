@@ -1,4 +1,7 @@
 /target/
-/transactions_PARSED_2017aug.csv
 
 writeDataTemplate.CSV
+identifiers.csv
+parsedTransactions125_101213.csv
+transactionData.CSV
+transactions_PARSED.csv
