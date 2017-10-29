@@ -2,6 +2,7 @@
 
 writeDataTemplate.CSV
 identifiers.csv
-parsedTransactions125_101213.csv
+parsedTransactions*.csv
 transactionData.CSV
 transactions_PARSED.csv
+*.jar

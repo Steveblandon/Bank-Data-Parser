@@ -74,15 +74,16 @@ public class ParseRequestProcessor extends MouseAdapter implements Publisher {
 	}
 	
 	private String getTimestampedFileName() {
+		Calendar currentDate = Calendar.getInstance();
 		return new StringBuilder()
 				.append(Main.properties.getProperty(Main.PROP_PARSED))
-				.append(Calendar.YEAR)
-				.append(Calendar.MONTH)
-				.append(Calendar.DAY_OF_MONTH)
+				.append(currentDate.get(Calendar.YEAR))
+				.append(currentDate.get(Calendar.MONTH))		//TODO: seems like the wrong month is being printed?
+				.append(currentDate.get(Calendar.DAY_OF_MONTH))
 				.append('_')
-				.append(Calendar.HOUR)
-				.append(Calendar.MINUTE)
-				.append(Calendar.SECOND)
+				.append(currentDate.get(Calendar.HOUR))
+				.append(currentDate.get(Calendar.MINUTE))
+				.append(currentDate.get(Calendar.SECOND))
 				.append(Main.properties.getProperty(Main.PROP_PARSED_EXT))
 				.toString();
 	}
