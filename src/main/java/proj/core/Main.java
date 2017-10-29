@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import proj.core.gui.GUI;
+import proj.core.utils.PropertiesUtils;
 
 public class Main {
 
@@ -16,7 +17,7 @@ public class Main {
 	public static final String PROP_PARSED = "PARSED_TRANSACTIONS_FILENAME";
 	public static final String PROP_PARSED_EXT = "PARSED_TRANSACTIONS_FILENAME_EXT";
 	public static final String PROP_IDENTIFIERS = "IDENTIFIERS_FILENAME";
-	public static Properties properties = loadProperties();
+	public static Properties properties = PropertiesUtils.loadProperties(CONFIG_FILE);
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -29,16 +30,5 @@ public class Main {
 				}
 			}
 		});
-	}
-
-	private static Properties loadProperties() {
-		Properties properties = new Properties();
-		try{
-			InputStream propStream = ClassLoader.getSystemResourceAsStream(CONFIG_FILE);
-			properties.load(propStream);
-		} catch (IOException e2) {
-			e2.printStackTrace();
-		}
-		return properties;
 	}
 }
