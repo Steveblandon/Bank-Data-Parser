@@ -15,7 +15,7 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
-import proj.core.extras.CustomOrderMappingStrategy;
+import proj.core.utils.CustomOrderMappingStrategy;
 
 public class OpenCsvAgent {
 	

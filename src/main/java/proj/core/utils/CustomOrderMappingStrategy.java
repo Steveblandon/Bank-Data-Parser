@@ -1,4 +1,4 @@
-package proj.core.extras;
+package proj.core.utils;
 
 import java.util.Arrays;
 import java.util.List;

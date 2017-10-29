@@ -2,7 +2,7 @@ package proj.core.beans;
 
 import com.opencsv.bean.CsvBindByName;
 
-import proj.core.extras.Utils;
+import proj.core.utils.StringUtil;
 
 public class ParsedTransaction extends Transaction {
 	
@@ -37,14 +37,10 @@ public class ParsedTransaction extends Transaction {
 			ParsedTransaction other = (ParsedTransaction) object;
 			
 			if (super.equals(object)
-					&& (other.account.equalsIgnoreCase(this.account)
-							|| Utils.nullOrEmptyStrings(this.account, other.account))
-					&& (other.category.equalsIgnoreCase(this.category)
-							|| Utils.nullOrEmptyStrings(this.category, other.category))
-					&& (other.notes.equalsIgnoreCase(this.notes)
-							|| Utils.nullOrEmptyStrings(this.notes, other.notes))
-					&& (other.type.equalsIgnoreCase(this.type)
-							|| Utils.nullOrEmptyStrings(this.type, other.type))) {
+					&& StringUtil.equalsWithFilters(this.account, other.account, true, true)
+					&& StringUtil.equalsWithFilters(this.category, other.category, true, true)
+					&& StringUtil.equalsWithFilters(this.notes, other.notes, true, true)
+					&& StringUtil.equalsWithFilters(this.type, other.type, true, true)) {
 				return true;
 			}
 	    }

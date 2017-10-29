@@ -5,7 +5,7 @@ import java.util.Date;
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvDate;
 
-import proj.core.extras.Utils;
+import proj.core.utils.StringUtil;
 
 public class Transaction {
 	
@@ -35,8 +35,7 @@ public class Transaction {
 			Transaction other = (Transaction) object;
 			if (other.amount == this.amount
 					&& other.date.equals(this.date)
-					&& (other.description.equalsIgnoreCase(this.description)
-							|| Utils.nullOrEmptyStrings(this.description, other.description))) {
+					&& StringUtil.equalsWithFilters(this.description, other.description, true, true)) {
 				return true;
 			}
 	    }
