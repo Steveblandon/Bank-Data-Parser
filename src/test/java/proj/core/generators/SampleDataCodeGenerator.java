@@ -1,4 +1,4 @@
-package proj.core.testDataHelpers;
+package proj.core.generators;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
