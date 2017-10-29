@@ -15,16 +15,18 @@ import proj.core.beans.ParsedTransaction;
 import proj.core.beans.Transaction;
 import proj.core.gui.abstracts.Publisher;
 import proj.core.gui.abstracts.Subscriber;
+import proj.core.utils.PropertiesUtils;
 
 public class ParseRequestProcessor extends MouseAdapter implements Publisher {
 
-	private JTextComponent accountNameComp;
+	protected JTextComponent accountNameComp;
 	private JTextComponent transactionsURIComp;
 	private JTextComponent identifiersURIComp;
 	private List<Transaction> transactions;
 	private List<Identifier> identifiers;
 	private IdentifierRegistry identifierRegistry;
 	private Subscriber subscriber;
+	private TransactionParser parser;
 	
 	public ParseRequestProcessor(JTextComponent accountNameComp, JTextComponent transactionsURIComp, JTextComponent identifiersURIComp) {
 		this.accountNameComp = accountNameComp;
@@ -42,13 +44,19 @@ public class ParseRequestProcessor extends MouseAdapter implements Publisher {
     public void mouseClicked(MouseEvent e) {
 		loadData();
 		saveParsedData(parseData());
+		subscriber.update(parser.getSuccessRatioMessage());
 		saveConfig();
 	}
 	
+	private void loadData() {
+		transactions = OpenCsvAgent.read(transactionsURIComp.getText(), Transaction.class);
+		identifiers = OpenCsvAgent.read(identifiersURIComp.getText(), Identifier.class);
+		identifierRegistry = new IdentifierRegistry(identifiers);
+	}
+	
 	private List<ParsedTransaction> parseData() {
-		TransactionParser parser = new TransactionParser(identifierRegistry, accountNameComp.getText());
+		parser = new TransactionParser(identifierRegistry, accountNameComp.getText());
 		List<ParsedTransaction> parsedTransactions = parser.parseAll(transactions); 
-		subscriber.update(parser.getSuccessRatioMessage());
 		return parsedTransactions;
 	}
 
@@ -58,16 +66,11 @@ public class ParseRequestProcessor extends MouseAdapter implements Publisher {
 		
 	}
 
-	private void saveConfig() {
+	protected void saveConfig() {
 		Main.properties.setProperty(Main.PROP_ACCOUNT, accountNameComp.getText());
 		Main.properties.setProperty(Main.PROP_IDENTIFIERS, identifiersURIComp.getText());
 		Main.properties.setProperty(Main.PROP_TRANSACTIONS, transactionsURIComp.getText());
-	}
-
-	private void loadData() {
-		transactions = OpenCsvAgent.read(transactionsURIComp.getText(), Transaction.class);
-		identifiers = OpenCsvAgent.read(identifiersURIComp.getText(), Identifier.class);
-		identifierRegistry = new IdentifierRegistry(identifiers);
+		PropertiesUtils.storeProperties(Main.properties, Main.CONFIG_FILE);
 	}
 	
 	private String getTimestampedFileName() {
