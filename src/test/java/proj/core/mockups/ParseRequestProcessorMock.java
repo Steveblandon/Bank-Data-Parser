@@ -16,7 +16,7 @@ public class ParseRequestProcessorMock extends ParseRequestProcessor {
 	
 	@Override
 	protected void saveConfig() {
-		ParseRequestProcessorTest.properties.setProperty(ParseRequestProcessorTest.ACCOUNT_PROP, accountNameComp.getText());
+		ParseRequestProcessorTest.properties.setProperty(ParseRequestProcessorTest.PROP_ACCOUNT, accountNameComp.getText());
 		PropertiesUtils.storeProperties(ParseRequestProcessorTest.properties, ParseRequestProcessorTest.CONFIG_FILE);
 	}
 

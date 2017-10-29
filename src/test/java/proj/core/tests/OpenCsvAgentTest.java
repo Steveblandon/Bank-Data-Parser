@@ -5,16 +5,22 @@ import static org.junit.Assert.*;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import proj.core.OpenCsvAgent;
 import proj.core.beans.Transaction;
+import proj.core.utils.PropertiesUtils;
 
 public class OpenCsvAgentTest {
 
-	List<Transaction> expectedTransactions;
+	private static final String CONFIG_FILE = "testConfig.properties";
+	private static final String PROP_WRITE_TEMPLATE = "WRITE_TEMPLATE";
+	private static final String PROP_RAW_TRANSACTIONS = "TRANSACTIONS";
+	private static final Properties properties = PropertiesUtils.loadProperties(CONFIG_FILE);
+	private List<Transaction> expectedTransactions;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -31,15 +37,15 @@ public class OpenCsvAgentTest {
 
 	@Test
 	public void testWrite() {
-		OpenCsvAgent.write("writeDataTemplate.CSV", Transaction.class, expectedTransactions);
-		List<Transaction> actualTransactions = OpenCsvAgent.read("writeDataTemplate.CSV", Transaction.class);
+		OpenCsvAgent.write(properties.getProperty(PROP_WRITE_TEMPLATE), Transaction.class, expectedTransactions);
+		List<Transaction> actualTransactions = OpenCsvAgent.read(properties.getProperty(PROP_WRITE_TEMPLATE), Transaction.class);
 		
 		assertEquals(expectedTransactions, actualTransactions);
 	}
 
 	@Test
 	public void testRead() {
-		List<Transaction> actualTransactions = OpenCsvAgent.read("transactionData.CSV", Transaction.class);
+		List<Transaction> actualTransactions = OpenCsvAgent.read(properties.getProperty(PROP_RAW_TRANSACTIONS), Transaction.class);
 		
 		assertEquals(expectedTransactions, actualTransactions);
 	}

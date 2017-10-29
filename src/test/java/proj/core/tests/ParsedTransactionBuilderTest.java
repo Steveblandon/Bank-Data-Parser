@@ -14,18 +14,18 @@ import proj.core.beans.Transaction;
 
 public class ParsedTransactionBuilderTest {
 
-	final String TYPE_TRANSFER = "transfer";
-	Transaction transaction;
-	Date date;
-	double positiveAmount;
-	double negativeAmount;
-	String description;
-	String descriptor;
-	String account;
-	String notes;
-	String defaultCategory;
-	String testCategory;
-	String defaultType;
+	private final String TYPE_TRANSFER = "transfer";
+	private Transaction transaction;
+	private Date date;
+	private double positiveAmount;
+	private double negativeAmount;
+	private String description;
+	private String descriptor;
+	private String account;
+	private String notes;
+	private String defaultCategory;
+	private String testCategory;
+	private String defaultType;
 	
 	@Before
 	public void setUp() throws Exception {

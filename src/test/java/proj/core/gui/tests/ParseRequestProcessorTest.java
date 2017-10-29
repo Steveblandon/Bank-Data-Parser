@@ -23,9 +23,8 @@ import proj.core.utils.PropertiesUtils;
 public class ParseRequestProcessorTest {
 
 	public static final String CONFIG_FILE = "testConfig.properties";
-	public static final String ACCOUNT_PROP = "ACCOUNT";
+	public static final String PROP_ACCOUNT = "ACCOUNT";
 	private static final String TRANSACTIONS_URI = "TRANSACTIONS";
-	private static final String PARSED_TRANSACTIONS_URI = "PARSED_TRANSACTIONS";
 	private static final String IDENTIFIERS_URI = "IDENTIFIERS";
 	public static Properties properties = PropertiesUtils.loadProperties(CONFIG_FILE);
 	private JTextComponent accountTextField;
@@ -36,7 +35,7 @@ public class ParseRequestProcessorTest {
 
 	@Before
 	public void setUp() throws Exception {
-		accountTextField = new URITextField(properties.getProperty(ACCOUNT_PROP));
+		accountTextField = new URITextField(properties.getProperty(PROP_ACCOUNT));
 		transactionsTextField = new URITextField(properties.getProperty(TRANSACTIONS_URI));
 		identifiersTextField = new URITextField(properties.getProperty(IDENTIFIERS_URI));
 		statusLabel = new StatusLabel("test-randomNumber:" + Math.random());
@@ -59,12 +58,18 @@ public class ParseRequestProcessorTest {
 	// for the test to succeed we would need to call on testConfig.properties. Also, don't forget to reset and testConfig.properties
 	// back to preset defaults.
 	public void testAccountPropChangeOnMouseClicked() {
-		String preChangeAccountValue = properties.getProperty(ACCOUNT_PROP);
+		String preChangeAccountValue = properties.getProperty(PROP_ACCOUNT);
 		String newAccountValue = "test acc - " + Math.random();
 		accountTextField.setText(newAccountValue);
 		parseRequestProcessor.mouseClicked(new MouseEvent(new JButton(), 0, 0, 0, 0, 0, 0, false));
-		String postChangeAccountValue = PropertiesUtils.loadProperties(CONFIG_FILE).getProperty(ACCOUNT_PROP);
+		String postChangeAccountValue = PropertiesUtils.loadProperties(CONFIG_FILE).getProperty(PROP_ACCOUNT);
+		resetAccountPropertyChange(preChangeAccountValue);		//incase other tests are sensitive to such changes, like TransactionParserTest
 		
 		assertNotSame(preChangeAccountValue, postChangeAccountValue);
+	}
+
+	private void resetAccountPropertyChange(String preChangeAccountValue) {
+		properties.setProperty(PROP_ACCOUNT, preChangeAccountValue);
+		PropertiesUtils.storeProperties(properties, CONFIG_FILE);
 	}
 }

@@ -12,14 +12,14 @@ import proj.core.beans.ParsedTransaction;
 
 public class ParsedTransactionTest {
 
-	ParsedTransaction expectedParsedTransaction;
-	Date date;
-	double amount;
-	String description;
-	String account;
-	String notes;
-	String category;
-	String type;
+	private ParsedTransaction expectedParsedTransaction;
+	private Date date;
+	private double amount;
+	private String description;
+	private String account;
+	private String notes;
+	private String category;
+	private String type;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -36,7 +36,7 @@ public class ParsedTransactionTest {
 		expectedParsedTransaction.setDate(date);
 		expectedParsedTransaction.setDescription(description);
 		expectedParsedTransaction.setAccount(account);
-		expectedParsedTransaction.setNotes(notes);
+		expectedParsedTransaction.setNotes(null);	//this is to test that null and empty strings are treated as equals
 		expectedParsedTransaction.setCategory(category);
 		expectedParsedTransaction.setType(type);
 	}
