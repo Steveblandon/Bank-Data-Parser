@@ -13,7 +13,7 @@ import proj.core.gui.abstracts.Subscriber;
 
 public class FilePathSelector extends MouseAdapter implements Publisher {
 	
-	private String filePath;
+	private File selectedFile;
 	private String filterDescription;
 	private String[] filters;
 	private Component parent;
@@ -33,7 +33,7 @@ public class FilePathSelector extends MouseAdapter implements Publisher {
 	}
 	
 	public FilePathSelector setDefaultFilePath(String filePath) {
-		this.filePath = filePath;
+		this.selectedFile = new File(filePath);
 		return this;
 	}
 	
@@ -45,16 +45,32 @@ public class FilePathSelector extends MouseAdapter implements Publisher {
 	
 	@Override
     public void mouseClicked(MouseEvent e) {
-        JFileChooser fileChooser = new JFileChooser();
+		JFileChooser fileChooser = createFileChooserWithFilters();
+		setDirectoryToPreviousSelection(fileChooser);
+		updateSelectedFileOnUserSelection(fileChooser);
+		updateSubscriber();
+    }
+
+	private JFileChooser createFileChooserWithFilters() {
+		JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(filterDescription, filters);
         fileChooser.setFileFilter(filter);
-        File file = new File(filePath != null? filePath : "");
-        fileChooser.setCurrentDirectory(file);
-        if (fileChooser.showDialog(parent, "select") == JFileChooser.APPROVE_OPTION) {
-        	filePath = fileChooser.getSelectedFile().getPath();
-        	if (subscriber != null) {
-        		subscriber.update(filePath);
-        	}
+        return fileChooser;
+	}
+
+	private void setDirectoryToPreviousSelection(JFileChooser fileChooser) {
+        fileChooser.setCurrentDirectory(selectedFile);
+	}
+
+	private void updateSelectedFileOnUserSelection(JFileChooser fileChooser) {
+		if (fileChooser.showDialog(parent, "select") == JFileChooser.APPROVE_OPTION) {
+        	selectedFile = fileChooser.getSelectedFile();
         }
-    }
+	}
+
+	private void updateSubscriber() {
+		if (subscriber != null) {
+    		subscriber.update(selectedFile.getPath());
+    	}
+	}
 }
