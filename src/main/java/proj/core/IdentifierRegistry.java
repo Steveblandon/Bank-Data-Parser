@@ -36,6 +36,7 @@ public class IdentifierRegistry {
 		int high = identifiers.size() - 1;
 		Identifier identifier = null;
 		String identifierID = "";
+		key = key.toUpperCase();		//identifier IDs are uppercase, but we dont want to change case of final descriptors
 		
 		while (low <= high) {
 			mid = (low + high) / 2;
