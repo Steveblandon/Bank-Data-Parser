@@ -15,8 +15,6 @@ Payment Thank You-Mobile,credit card payment,transfer,FALSE,
 TIDY,tidy,unknown,FALSE,Housing
 FAT BURGER #104,fat burger,unknown,FALSE,Restaurants & Bars
 MENCHIES 004 ARTESIA PLAZ,menchies,unknown,FALSE,Restaurants & Bars
-VENMO            CASHOUT                    PPD ID: 5264681992,venmo,unknown,TRUE,
-ALLY BANK        $TRANSFER  1110336933      WEB ID: 3770527921,funding,transfer,FALSE,
-ALLY BANK        $TRANSFER  1109652625      WEB ID: 3770527921,funding,transfer,FALSE,
-ATM WITHDRAWAL                       001641  08/18550 N SEP,atm withdrawal,transfer,FALSE,
-RAYTHEON COMPANY DIR DEP                    PPD ID: 1951778500,raytheon,unknown,FALSE,paycheck
+VENMO,venmo,unknown,TRUE,
+ALLY BANK        $TRANSFER,funding,transfer,FALSE,
+ATM WITHDRAWAL,atm withdrawal,transfer,FALSE,
